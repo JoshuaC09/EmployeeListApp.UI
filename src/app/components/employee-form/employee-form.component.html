@@ -1,192 +1,193 @@
-<div class="p-4 sm:p-8 mt-4"></div>
-<div class="bg-white shadow-md rounded-lg p-4 sm:p-6">
-  <ng-container *ngIf="isEdit">
-    <h4 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
-      Edit Employee Form
-    </h4>
-  </ng-container>
-  <ng-container *ngIf="isView">
-    <h4 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
-      View Employee Form - All Fields Are Read Only
-    </h4>
-  </ng-container>
-  <ng-container *ngIf="!isEdit && !isView">
-    <h4 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
-      Create Employee Form
-    </h4>
-  </ng-container>
-  <form
-    [formGroup]="employeeForm"
-    (ngSubmit)="onSubmit()"
-    class="space-y-4 sm:space-y-6"
-  >
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <mat-form-field class="w-full">
-        <mat-label>First Name</mat-label>
-        <input
-          type="text"
-          matInput
-          formControlName="firstName"
-          placeholder="First Name"
-          [readonly]="isView"
-          class="w-full"
-        />
-      </mat-form-field>
-      <mat-form-field class="w-full">
-        <mat-label>Last Name</mat-label>
-        <input
-          type="text"
-          matInput
-          formControlName="lastName"
-          placeholder="Last Name"
-          [readonly]="isView"
-          class="w-full"
-        />
-      </mat-form-field>
-      <mat-form-field class="w-full">
-        <mat-label>Middle Name</mat-label>
-        <input
-          type="text"
-          matInput
-          formControlName="middleName"
-          placeholder="Middle Name"
-          [readonly]="isView"
-          class="w-full"
-        />
-      </mat-form-field>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <mat-form-field class="w-full">
-        <mat-label>Email</mat-label>
-        <input
-          type="email"
-          matInput
-          formControlName="email"
-          placeholder="Email"
-          [readonly]="isView"
-          class="w-full"
-        />
-        <mat-error *ngIf="employeeForm.get('email')?.hasError('email')">
-          Please enter a valid email address
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="w-full">
-        <mat-label>Phone Number</mat-label>
-        <input
-          type="number"
-          matInput
-          formControlName="phoneNumber"
-          placeholder="Phone Number"
-          [readonly]="isView"
-          class="w-full"
-        />
-      </mat-form-field>
-    </div>
-
-    <mat-form-field class="w-full">
-      <mat-label>Address</mat-label>
-      <input
-        type="text"
-        matInput
-        formControlName="address"
-        placeholder="Address"
-        [readonly]="isView"
-        class="w-full"
-      />
-    </mat-form-field>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <mat-form-field class="w-full">
-        <mat-label>Salary</mat-label>
-        <input
-          type="text"
-          matInput
-          formControlName="salary"
-          placeholder="Salary"
-          appNumberFormat
-          [readonly]="isView"
-          class="w-full"
-        />
-        <mat-error *ngIf="employeeForm.get('salary')?.hasError('required')">
-          Salary is required
-        </mat-error>
-        <mat-error *ngIf="employeeForm.get('salary')?.hasError('min')">
-          Salary must be a positive number
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="w-full">
-        <mat-label>Status</mat-label>
-        <input
-          matInput
-          [value]="getStatusViewValue(employeeForm.get('status')?.value)"
-          readonly
-          *ngIf="isView"
-          class="w-full"
-        />
-        <mat-select formControlName="status" *ngIf="!isView" class="w-full">
-          <mat-option
-            *ngFor="let status of statusOptions"
-            [value]="status.value"
-          >
-            {{ status.viewValue }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="w-full">
-        <mat-label>Gender</mat-label>
-        <input
-          matInput
-          [value]="getGenderViewValue(employeeForm.get('gender')?.value)"
-          readonly
-          *ngIf="isView"
-          class="w-full"
-        />
-        <mat-select formControlName="gender" *ngIf="!isView" class="w-full">
-          <mat-option
-            *ngFor="let gender of genderOptions"
-            [value]="gender.value"
-          >
-            {{ gender.viewValue }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div
-      class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6"
+<div class="p-4 sm:p-8 mt-4 container mx-auto px-4 py-8">
+  <div class="bg-white shadow-md rounded-lg p-4 sm:p-6">
+    <ng-container *ngIf="isEdit">
+      <h4 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
+        Edit Employee Form
+      </h4>
+    </ng-container>
+    <ng-container *ngIf="isView">
+      <h4 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
+        View Employee Form - All Fields Are Read Only
+      </h4>
+    </ng-container>
+    <ng-container *ngIf="!isEdit && !isView">
+      <h4 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
+        Create Employee Form
+      </h4>
+    </ng-container>
+    <form
+      [formGroup]="employeeForm"
+      (ngSubmit)="onSubmit()"
+      class="space-y-4 sm:space-y-6"
     >
-      <ng-container *ngIf="!isView">
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="!employeeForm.valid"
-          class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-        >
-          {{ isEdit ? "Update" : "Save" }}
-        </button>
-        <button
-          mat-raised-button
-          color="warn"
-          type="button"
-          (click)="onCancel()"
-          class="w-full sm:w-auto px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-        >
-          Cancel
-        </button>
-      </ng-container>
-      <ng-container *ngIf="isView">
-        <button
-          mat-raised-button
-          color="primary"
-          type="button"
-          (click)="onBack()"
-          class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-        >
-          Back
-        </button>
-      </ng-container>
-    </div>
-  </form>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <mat-form-field class="w-full">
+          <mat-label>First Name</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="firstName"
+            placeholder="First Name"
+            [readonly]="isView"
+            class="w-full"
+          />
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>Last Name</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="lastName"
+            placeholder="Last Name"
+            [readonly]="isView"
+            class="w-full"
+          />
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>Middle Name</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="middleName"
+            placeholder="Middle Name"
+            [readonly]="isView"
+            class="w-full"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <mat-form-field class="w-full">
+          <mat-label>Email</mat-label>
+          <input
+            type="email"
+            matInput
+            formControlName="email"
+            placeholder="Email"
+            [readonly]="isView"
+            class="w-full"
+          />
+          <mat-error *ngIf="employeeForm.get('email')?.hasError('email')">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>Phone Number</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="phoneNumber"
+            placeholder="Phone Number"
+            [readonly]="isView"
+            class="w-full"
+          />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field class="w-full">
+        <mat-label>Address</mat-label>
+        <input
+          type="text"
+          matInput
+          formControlName="address"
+          placeholder="Address"
+          [readonly]="isView"
+          class="w-full"
+        />
+      </mat-form-field>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <mat-form-field class="w-full">
+          <mat-label>Salary</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="salary"
+            placeholder="Salary"
+            appNumberFormat
+            [readonly]="isView"
+            class="w-full"
+          />
+          <mat-error *ngIf="employeeForm.get('salary')?.hasError('required')">
+            Salary is required
+          </mat-error>
+          <mat-error *ngIf="employeeForm.get('salary')?.hasError('min')">
+            Salary must be a positive number
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>Status</mat-label>
+          <input
+            matInput
+            [value]="getStatusViewValue(employeeForm.get('status')?.value)"
+            readonly
+            *ngIf="isView"
+            class="w-full"
+          />
+          <mat-select formControlName="status" *ngIf="!isView" class="w-full">
+            <mat-option
+              *ngFor="let status of statusOptions"
+              [value]="status.value"
+            >
+              {{ status.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>Gender</mat-label>
+          <input
+            matInput
+            [value]="getGenderViewValue(employeeForm.get('gender')?.value)"
+            readonly
+            *ngIf="isView"
+            class="w-full"
+          />
+          <mat-select formControlName="gender" *ngIf="!isView" class="w-full">
+            <mat-option
+              *ngFor="let gender of genderOptions"
+              [value]="gender.value"
+            >
+              {{ gender.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6"
+      >
+        <ng-container *ngIf="!isView">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!employeeForm.valid"
+            class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            {{ isEdit ? "Update" : "Save" }}
+          </button>
+          <button
+            mat-raised-button
+            color="warn"
+            type="button"
+            (click)="onCancel()"
+            class="w-full sm:w-auto px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+          >
+            Cancel
+          </button>
+        </ng-container>
+        <ng-container *ngIf="isView">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="onBack()"
+            class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Back
+          </button>
+        </ng-container>
+      </div>
+    </form>
+  </div>
 </div>

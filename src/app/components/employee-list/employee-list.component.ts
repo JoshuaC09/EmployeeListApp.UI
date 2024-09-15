@@ -11,6 +11,9 @@ import { NumberFormatPipe } from 'src/app/pipes/number-format.pipe';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 import {
   MatDialog,
@@ -32,6 +35,9 @@ import {
     NumberFormatPipe,
     MatDialogModule,
     MatProgressSpinnerModule,
+    MatInputModule,
+    FormsModule,
+    MatIconModule,
   ],
   standalone: true,
 })
@@ -53,6 +59,7 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
     'action',
   ];
   isLoading: boolean = true;
+  searchTerm: string = '';
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
@@ -69,7 +76,6 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    console.log('Paginator after view init:', this.paginator);
   }
 
   loadEmployees() {
@@ -78,14 +84,9 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
       (result) => {
         this.dataSource.data = result;
         this.isLoading = false;
-
-        // Ensure paginator is set after data is loaded
         if (this.paginator) {
           this.dataSource.paginator = this.paginator;
         }
-
-        console.log('Paginator:', this.dataSource.paginator); // Should now log the paginator
-        console.log('Data Source:', this.dataSource.data);
       },
       (error) => {
         console.error('Error loading employees:', error);
@@ -95,6 +96,24 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
           '',
           { enableHtml: true }
         );
+      }
+    );
+  }
+
+  searchEmployees() {
+    this.isLoading = true;
+    this.httpService.searchEmployees(this.searchTerm).subscribe(
+      (result) => {
+        console.log('Search results:', result);
+        this.dataSource.data = result;
+        this.isLoading = false;
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
+      },
+      (error) => {
+        console.error('Error searching employees:', error);
+        this.isLoading = false;
       }
     );
   }

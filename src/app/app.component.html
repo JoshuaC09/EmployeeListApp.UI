@@ -1,12 +1,35 @@
-<mat-toolbar color="primary" class="flex items-center">
-  <div class="flex items-center">
-    <button mat-icon-button class="mr-4" routerLink="/">
-      <mat-icon>home</mat-icon>
-    </button>
-    <span class="text-lg font-semibold">Employee List Application</span>
+<mat-toolbar color="primary" class="px-4">
+  <div class="flex items-center justify-between w-full max-w-6xl mx-auto">
+    <div class="flex items-center">
+      <button mat-icon-button class="mr-4" routerLink="/">
+        <mat-icon>home</mat-icon>
+      </button>
+      <span class="text-lg">Employee List Application</span>
+    </div>
+
+    <nav class="space-x-1">
+      <a
+        mat-button
+        routerLink="/"
+        [class.active]="isActive('/')"
+        class="px-3 py-2"
+        >Home</a
+      >
+      <a
+        mat-button
+        routerLink="/"
+        [class.active]="isActive('/about')"
+        class="px-3 py-2"
+        >About</a
+      >
+      <a
+        mat-button
+        routerLink="/"
+        [class.active]="isActive('/contact')"
+        class="px-3 py-2"
+        >Contact</a
+      >
+    </nav>
   </div>
 </mat-toolbar>
-
-<div class="container mx-auto px-4 py-8">
-  <router-outlet></router-outlet>
-</div>
+<router-outlet></router-outlet>

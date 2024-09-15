@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { IEmployee } from './interfaces/employee';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,5 +32,12 @@ export class HttpService {
     return this.http.delete<IEmployee>(
       `${this.apiUrl}/api/Employee/${employeeId}`
     );
+  }
+
+  searchEmployees(searchPattern: string): Observable<IEmployee[]> {
+    const params = new HttpParams().set('searchPattern', searchPattern);
+    return this.http.get<IEmployee[]>(`${this.apiUrl}/api/Employee/search`, {
+      params,
+    });
   }
 }
