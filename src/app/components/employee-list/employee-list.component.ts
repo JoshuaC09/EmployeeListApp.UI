@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { NumberFormatPipe } from 'src/app/pipes/number-format.pipe';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import {
   MatDialog,
@@ -21,7 +22,6 @@ import {
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.css'],
-
   imports: [
     MatTableModule,
     CommonModule,
@@ -31,11 +31,14 @@ import {
     RouterLink,
     NumberFormatPipe,
     MatDialogModule,
+    MatProgressSpinnerModule,
   ],
   standalone: true,
 })
 export class EmployeeListComponent implements OnInit, AfterViewInit {
-  dataSource: MatTableDataSource<IEmployee>;
+  dataSource: MatTableDataSource<IEmployee> = new MatTableDataSource<IEmployee>(
+    []
+  );
   displayedColumns: string[] = [
     'employeeId',
     'firstName',
@@ -49,17 +52,16 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
     'gender',
     'action',
   ];
+  isLoading: boolean = true;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
   constructor(
     private httpService: HttpService,
     private router: Router,
     private dialog: MatDialog,
     private toaster: ToastrService
-  ) {
-    this.dataSource = new MatTableDataSource<IEmployee>([]);
-  }
+  ) {}
 
   ngOnInit() {
     this.loadEmployees();
@@ -67,13 +69,34 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    console.log('Paginator after view init:', this.paginator);
   }
 
   loadEmployees() {
-    this.httpService.GetAllEmployee().subscribe((result) => {
-      this.dataSource.data = result;
-      console.log(result);
-    });
+    this.isLoading = true;
+    this.httpService.GetAllEmployee().subscribe(
+      (result) => {
+        this.dataSource.data = result;
+        this.isLoading = false;
+
+        // Ensure paginator is set after data is loaded
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
+
+        console.log('Paginator:', this.dataSource.paginator); // Should now log the paginator
+        console.log('Data Source:', this.dataSource.data);
+      },
+      (error) => {
+        console.error('Error loading employees:', error);
+        this.isLoading = false;
+        this.toaster.error(
+          'Failed to load employees.<br>Check the server and try again.',
+          '',
+          { enableHtml: true }
+        );
+      }
+    );
   }
 
   edit(id: number) {
@@ -96,11 +119,19 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.httpService.deleteEmployee(id).subscribe(() => {
-          console.log('Successfully deleted employee');
-          this.toaster.success('Successfully deleted employee');
-          this.loadEmployees();
-        });
+        this.isLoading = true;
+        this.httpService.deleteEmployee(id).subscribe(
+          () => {
+            console.log('Successfully deleted employee');
+            this.toaster.success('Successfully deleted employee');
+            this.loadEmployees();
+          },
+          (error) => {
+            console.error('Error deleting employee:', error);
+            this.toaster.error('Error deleting employee');
+            this.isLoading = false;
+          }
+        );
       }
     });
   }

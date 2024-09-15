@@ -1,10 +1,12 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button class="mr-4" routerLink="/">
-    <mat-icon>home</mat-icon>
-  </button>
-  <span>Employee List Application</span>
-  <span class="flex-grow"></span>
+<mat-toolbar color="primary" class="flex items-center">
+  <div class="flex items-center">
+    <button mat-icon-button class="mr-4" routerLink="/">
+      <mat-icon>home</mat-icon>
+    </button>
+    <span class="text-lg font-semibold">Employee List Application</span>
+  </div>
 </mat-toolbar>
-<div class="justify-center w-full px-36 py-8 relative">
+
+<div class="container mx-auto px-4 py-8">
   <router-outlet></router-outlet>
 </div>

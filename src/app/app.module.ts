@@ -1,21 +1,31 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { ToastrModule } from 'ngx-toastr';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { AppRoutingModule } from './app-routing.module';
-import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { EmployeeFormComponent } from './components/employee-form/employee-form.component';
-
-@NgModule({
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    EmployeeFormComponent,
+    MatToolbarModule,
+    MatIconModule,
+    RouterOutlet,
+    RouterLink,
+    ToastrModule,
+    MatProgressSpinnerModule,
   ],
-  providers: [],
-  declarations: [],
+  standalone: true,
 })
-export class AppModule {}
+export class AppComponent {
+  title = 'EmployeeListApp.UI';
+
+  constructor(private router: Router) {}
+
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
+}
